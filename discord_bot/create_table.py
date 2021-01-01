@@ -15,14 +15,14 @@ def create_tables():
     conn = None
     try:
         # connect to the PostgresSQL server
-        conn = psycopg2.connect(
-                host=DATABASES['HOST'],
-                database=DATABASES['DB_NAME'],
-                user=DATABASES['USER'],
-                password=DATABASES['PASSWORD'],
-                port=DATABASES['PORT']
-            )
-
+        # conn = psycopg2.connect(
+        #     host=DATABASES['HOST'],
+        #     database=DATABASES['DB_NAME'],
+        #     user=DATABASES['USER'],
+        #     password=DATABASES['PASSWORD'],
+        #     port=DATABASES['PORT']
+        # )
+        conn = psycopg2.connect(DATABASES['DATABASE_URL'], sslmode='require')
         cur = conn.cursor()
         cur.execute(command)
         cur.close()

@@ -18,10 +18,5 @@ REQUEST_TIMEOUT = 30  # In second
 
 #  Database setting
 DATABASES = {
-    'DB_NAME': os.environ.get('DB_NAME', 'bluestack_db'),
-    'USER': os.environ.get('DB_USER', ''),
-    'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-    'HOST': os.environ.get('DB_HOST', ''),
-    'PORT': os.environ.get('DB_PORT', ''),
     'DATABASE_URL': os.environ.get('DATABASE_URL')
 }

@@ -12,15 +12,9 @@ class DbConnection:
     def __init__(self):
         try:
             # connect to the PostgresSQL server
-            self.conn = psycopg2.connect(
-                host=DATABASES['HOST'],
-                database=DATABASES['DB_NAME'],
-                user=DATABASES['USER'],
-                password=DATABASES['PASSWORD'],
-                port=DATABASES['PORT']
-            )
+            conn = psycopg2.connect(DATABASES['DATABASE_URL'], sslmode='require')
         except Exception as error:
-            print(error)
+            print('Error while connection to database', error)
 
     def insert_data(self, user_id, query):
         """

@@ -12,7 +12,7 @@ class DbConnection:
     def __init__(self):
         try:
             # connect to the PostgresSQL server
-            conn = psycopg2.connect(DATABASES['DATABASE_URL'], sslmode='require')
+            self.conn = psycopg2.connect(DATABASES['DATABASE_URL'], sslmode='require')
         except Exception as error:
             print('Error while connection to database', error)
 
@@ -25,12 +25,17 @@ class DbConnection:
         """
         try:
             cursor = self.conn.cursor()
-            postgres_insert_query = """ INSERT INTO user_search (USER_ID, QUERY) VALUES (%s,%s)"""
+            postgres_check_query = """ SELECT QUERY from user_search where USER_ID = %s and QUERY like %s"""
             record_to_insert = (user_id, query)
-            cursor.execute(postgres_insert_query, record_to_insert)
-            self.conn.commit()
-            count = cursor.rowcount
-            print(count, 'Record inserted successfully into user search table')
+            cursor.execute(postgres_check_query, record_to_insert)
+            records = cursor.fetchall()
+            if not records:
+                postgres_insert_query = """ INSERT INTO user_search (USER_ID, QUERY) VALUES (%s,%s)"""
+                record_to_insert = (user_id, query)
+                cursor.execute(postgres_insert_query, record_to_insert)
+                self.conn.commit()
+                count = cursor.rowcount
+                print(count, 'Record inserted successfully into user search table')
         except Exception as error:
             print('Failed to insert record into user search table', error)
         finally:
@@ -49,9 +54,9 @@ class DbConnection:
         """
         try:
             cursor = self.conn.cursor()
-            postgres_insert_query = """ SELECT QUERY from user_search where USER_ID = %s and QUERY LIKE %s"""
+            postgres_search_query = """ SELECT QUERY from user_search where USER_ID = %s and QUERY LIKE %s"""
             record_to_insert = (user_id, '%'+search+'%')
-            cursor.execute(postgres_insert_query, record_to_insert)
+            cursor.execute(postgres_search_query, record_to_insert)
             records = cursor.fetchall()
             count = cursor.rowcount
             print(count, 'Record inserted successfully into user search table')
